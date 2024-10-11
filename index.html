@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>俱进箱码生成</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body>
+
+<!-- 下拉框选择 -->
+<select name="boxs" id="mySelect" onchange="updateText()" style="width: 200px;">
+  <option value="red">红</option>
+  <option value="yellow">黄</option>
+  <option value="blue">蓝</option>
+  <option value="green">绿</option>
+  <option value="black">黑</option>
+</select>
+
+<!-- 输出的文本 -->
+<p id="outputText">W#021203020021#1350X1150X700#</p>
+<label class="text-right search_form_div_label">箱码尾号：（五位）</label>
+<input id="text" type="text" value="001" style="width: 200px;" /><br />
+
+<!-- 生成按钮 -->
+<button onclick="makeCode()">生成</button>
+
+<!-- 显示二维码的容器 -->
+<div id="qrcode" style="width:200px; height:200px; margin-top:40px;"></div>
+
+<script type="text/javascript">
+
+  // 更新文本内容的函数
+  function updateText() {
+    var selectBox = document.getElementById("mySelect");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    var outputText = document.getElementById("outputText");
+
+    if (selectedValue === "red") {
+      outputText.innerHTML = "W#021203020021#1350X1150X700#";
+    } else if (selectedValue === "yellow") {
+      outputText.innerHTML = "W#021203020037#1470X1150X920#";
+    } else if (selectedValue === "blue") {
+      outputText.innerHTML = "W#021203020029#1200X800X700#";
+    } else if (selectedValue === "green") {
+      outputText.innerHTML = "W#021203020042#1200X1000X1360#";
+    } else if (selectedValue === "black") {
+      outputText.innerHTML = "W#021203020024#1470X1150X700#";
+    } else {
+      outputText.innerHTML = "请选择一个选项";
+    }
+  }
+
+  // 生成二维码的函数
+  function makeCode() {
+    var elText = document.getElementById("text");
+    var outputText = document.getElementById("outputText");
+
+    // 确保有输入内容
+    if (elText.value) {
+      // 清空之前生成的二维码
+      document.getElementById("qrcode").innerHTML = "";
+
+      // 重新初始化QRCode对象，并生成新二维码
+      var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width: 160,
+        height: 160
+      });
+
+      // 将输入内容与二维码文本结合
+      qrcode.makeCode(outputText.innerHTML + elText.value);
+    } else {
+      alert("请输入尾号");
+      elText.focus();
+    }
+  }
+
+  // 初始化二维码
+  makeCode();
+
+  // 输入框的事件监听
+  $("#text")
+    .on("blur", function () {
+      makeCode();
+    })
+    .on("keydown", function (e) {
+      if (e.keyCode == 13) { // 如果按下回车键
+        makeCode();
+      }
+    });
+
+</script>
+
+</body>
+</html>
